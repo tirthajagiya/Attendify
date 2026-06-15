@@ -1,0 +1,33 @@
+# Render Blueprint for the Attendify backend.
+# Push this repo to GitHub, then in Render: New + > Blueprint > select repo.
+# Render reads this file and provisions the service automatically.
+#
+# Secrets (MONGO_URI, JWT_SECRET) are marked `sync: false` so Render does NOT
+# pull them from the repo - you set them once in the dashboard.
+services:
+  - type: web
+    name: attendify-api
+    runtime: node
+    plan: free
+    region: singapore # change to oregon / frankfurt / ohio if closer to you
+    rootDir: server
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000 # Render injects its own PORT; this is just a fallback
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_ORIGIN
+        # Update this to your deployed Vercel URL after the first deploy.
+        # Comma-separated values are supported.
+        sync: false
+      - key: QR_SESSION_TTL
+        value: 300
