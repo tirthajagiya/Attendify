@@ -11,7 +11,9 @@ services:
     plan: free
     region: singapore # change to oregon / frankfurt / ohio if closer to you
     rootDir: server
-    buildCommand: npm ci && npm run build
+    # NODE_ENV=production makes npm skip devDependencies, but we need
+    # typescript + @types/* to compile. --include=dev forces them in.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
